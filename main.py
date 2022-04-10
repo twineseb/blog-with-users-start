@@ -15,12 +15,12 @@ from dotenv import load_dotenv
 load_dotenv('conf/.env')
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.getenv("APP_SECRET_KEY")
+app.config['SECRET_KEY'] = os.environ.get("APP_SECRET_KEY")
 ckeditor = CKEditor(app)
 Bootstrap(app)
 
 ##CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -65,7 +65,7 @@ class Comment(db.Model):
     parent_post = relationship("BlogPost", back_populates="comments")
 
 
-# db.create_all()
+db.create_all()
 
 @login_manager.user_loader
 def load_user(user_id):
